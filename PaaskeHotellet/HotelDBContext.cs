@@ -10,6 +10,7 @@ namespace PaaskeHotellet
         public HotelDBContext()
             : base("name=HotelDBContext")
         {
+            this.Configuration.ProxyCreationEnabled = false;
         }
 
         public virtual DbSet<Booking> Booking { get; set; }
