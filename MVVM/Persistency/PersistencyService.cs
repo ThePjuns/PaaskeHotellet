@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PaaskeHotellet;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -8,17 +9,17 @@ using System.Threading.Tasks;
 
 namespace MVVM.Persistency
 {
-    class PersistencyService <T>
+    class PersistencyService
     {
         public const string ServerUrl = "http://localhost:50466/";
 
 
-        public static List<T> GetEvents()
+        public static List<Hotel> GetEvents()
         {
             HttpClientHandler clientHandler = new HttpClientHandler();
             clientHandler.UseDefaultCredentials = true;
 
-            List<T> listHotels = new List<T>();
+            List<Hotel> listHotels = new List<Hotel>();
             using (var client = new HttpClient(clientHandler))
             {
                 client.BaseAddress = new Uri(ServerUrl);
@@ -29,7 +30,7 @@ namespace MVVM.Persistency
                     var response = client.GetAsync("api/object").Result;
                     if (response.IsSuccessStatusCode)
                     {
-                        var Tobject = response.Content.ReadAsAsync<IEnumerable<T>>().Result;
+                        var Tobject = response.Content.ReadAsAsync<IEnumerable<Hotel>>().Result;
                         foreach (var ho in Tobject)
                         {
                             listHotels.Add(ho);
@@ -46,7 +47,7 @@ namespace MVVM.Persistency
 
         }
 
-        public static void AddTobject(T ho)
+        public static void AddTobject(Hotel ho)
         {
             HttpClientHandler clientHandler = new HttpClientHandler();
             clientHandler.UseDefaultCredentials = true;
@@ -67,7 +68,7 @@ namespace MVVM.Persistency
             }
         }
 
-        public static void DeleteTobject(T ho)
+        public static void DeleteTobject(Hotel ho)
         {
             HttpClientHandler clientHandler = new HttpClientHandler();
             clientHandler.UseDefaultCredentials = true;
