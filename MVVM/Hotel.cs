@@ -8,12 +8,14 @@ namespace MVVM
 
     [Table("Hotel")]
     public partial class Hotel
+
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Hotel()
         {
             Room = new HashSet<Room>();
         }
+
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -29,5 +31,13 @@ namespace MVVM
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Room> Room { get; set; }
+
+        public Hotel( string name, string address)
+        {
+            
+            Name = name;
+            Address = address;
+           
+        }
     }
 }

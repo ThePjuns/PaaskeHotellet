@@ -1,15 +1,13 @@
 ﻿<Page
-    x:Class="MVVM.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:MVVM"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Custom="using:Microsoft.Xaml.Interactivity" xmlns:Custom1="using:Microsoft.Xaml.Interactions.Core"
+    x:Class="MVVM.MainPage"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-    <Page.DataContext>
-        <local:ViewModel/>
-        </Page.DataContext>
+    Background="CadetBlue">
     <Page.Resources>
         <DataTemplate x:Key="HotelDataTemplate">
             <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top"
@@ -19,11 +17,67 @@
                 <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Address}" />
             </StackPanel>
         </DataTemplate>
-    </Page.Resources>    
+    </Page.Resources>
+    <Page.DataContext>
+        <local:ViewModel/>
+    </Page.DataContext>
+    
     <Grid>
-           
-        <ListView ItemsSource="{Binding ListHotels}" ItemTemplate="{StaticResource HotelDataTemplate}"> 
-            
-        </ListView>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+
+
+        <ListView ItemsSource="{Binding ListHotels}" 
+                  ItemTemplate="{StaticResource HotelDataTemplate}"
+                  SelectedItem="{Binding SelectHotel, Mode=OneWay}"
+                  Background="White" Margin="80,80,0,80" />
+
+
+        <StackPanel
+            Grid.Column="1"
+            Margin="80,80,80,80" >
+
+            <TextBlock
+                Text="Name"/>
+            <TextBox
+                Text="{Binding SelectHotel.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <TextBlock
+                Text="Address"/>
+            <TextBox
+                Text="{Binding SelectHotel.Address, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+
+            <StackPanel Orientation="Horizontal">
+                <AppBarButton
+                    Label="Add"
+                    Background="White"
+                    Icon="Add"
+                    Margin="0,10,10,0"
+                    Command="{Binding IAdd}"/>
+                <AppBarButton
+                    Label="Delete"
+                    Icon="Delete"
+                    Margin="0,10,10,0"
+                    Background="White"
+                    Command="{Binding IRemove}"/>
+                <AppBarButton
+                    Label="Update"
+                    Icon="Like"
+                    Margin="0,10,0,0"
+                    Background="White"
+                    Command="{Binding IUpdate}"/>
+
+            </StackPanel>
+
+
+        </StackPanel>
+
+
+
+
+
     </Grid>
 </Page>
