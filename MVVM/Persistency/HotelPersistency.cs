@@ -1,4 +1,4 @@
-﻿using PaaskeHotellet;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,17 +9,15 @@ using System.Threading.Tasks;
 
 namespace MVVM.Persistency
 {
-    class PersistencyService
+    class HotelPersistency : IPersist<Hotel>
     {
-        public const string ServerUrl = "http://localhost:50466/";
+        public const string ServerUrl = "Http://localhost:53995";
 
-
-        public static List<Hotel> GetEvents()
+        #region Create
+        public void Create(Hotel TObject)
         {
             HttpClientHandler clientHandler = new HttpClientHandler();
             clientHandler.UseDefaultCredentials = true;
-
-            List<Hotel> listHotels = new List<Hotel>();
             using (var client = new HttpClient(clientHandler))
             {
                 client.BaseAddress = new Uri(ServerUrl);
@@ -27,13 +25,39 @@ namespace MVVM.Persistency
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 try
                 {
-                    var response = client.GetAsync("api/object").Result;
+                    var response = client.PostAsJsonAsync("api/Hotels", TObject).Result;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
+            }
+        }
+        #endregion
+
+
+        #region Read
+        public List<Hotel> Read()
+        {
+            HttpClientHandler clientHandler = new HttpClientHandler();
+            clientHandler.UseDefaultCredentials = true;
+
+            List<Hotel> ListObjects = new List<Hotel>();
+            using (var client = new HttpClient(clientHandler))
+            {
+                client.BaseAddress = new Uri(ServerUrl);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                try
+                {
+                    var response = client.GetAsync("api/Hotels").Result;
                     if (response.IsSuccessStatusCode)
                     {
-                        var Tobject = response.Content.ReadAsAsync<IEnumerable<Hotel>>().Result;
-                        foreach (var ho in Tobject)
+                        var List = response.Content.ReadAsAsync<IEnumerable<Hotel>>().Result;
+                        foreach (var ob in List)
                         {
-                            listHotels.Add(ho);
+                            ListObjects.Add(ob);
                         }
                     }
                 }
@@ -43,11 +67,22 @@ namespace MVVM.Persistency
                     throw;
                 }
             }
-            return listHotels;
+            return ListObjects;
 
         }
+        #endregion
 
-        public static void AddTobject(Hotel ho)
+
+        #region Update
+        public void Update(Hotel TObject, Hotel OObject)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
+
+
+        #region Delete
+        public void Delete(Hotel TObject)
         {
             HttpClientHandler clientHandler = new HttpClientHandler();
             clientHandler.UseDefaultCredentials = true;
@@ -58,7 +93,7 @@ namespace MVVM.Persistency
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 try
                 {
-                    var response = client.PostAsJsonAsync("api/object", ho).Result;
+                    var response = client.DeleteAsync($"api/Hotels/{TObject.Hotel_No}").Result;
                 }
                 catch (Exception e)
                 {
@@ -66,30 +101,9 @@ namespace MVVM.Persistency
                     throw;
                 }
             }
-        }
-
-        public static void DeleteTobject(Hotel ho)
-        {
-            HttpClientHandler clientHandler = new HttpClientHandler();
-            clientHandler.UseDefaultCredentials = true;
-            using (var client = new HttpClient(clientHandler))
-            {
-                client.BaseAddress = new Uri(ServerUrl);
-                client.DefaultRequestHeaders.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                try
-                {
-                    var response = client.DeleteAsync($"api/object/{ho.Id}").Result;
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    throw;
-                }
-            }
-        }
-
-
+        } 
+        #endregion
     }
 }
+
 
